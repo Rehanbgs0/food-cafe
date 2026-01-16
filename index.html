@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Daily Grind | Wake Up to Perfection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --accent: #E07A5F;
+            --deep-brown: #3D2B1F;
+            --bg-cream: #F4F1DE;
+            --white: #FFFFFF;
+            --text-muted: #5E503F;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-cream); color: var(--deep-brown); line-height: 1.6; overflow-x: hidden; }
+
+        /* --- NAVIGATION --- */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 25px 8%; position: absolute; width: 100%; z-index: 100;
+        }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--white); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .nav-links { display: flex; align-items: center; }
+        .nav-links a { color: var(--white); text-decoration: none; margin-left: 30px; font-weight: 500; font-size: 0.9rem; transition: 0.3s; }
+        .nav-links a:hover { color: var(--accent); }
+        .order-btn { border: 1px solid var(--white); padding: 8px 20px; border-radius: 20px; text-decoration: none; }
+
+        /* --- CART ICON --- */
+        .cart-trigger { position: relative; cursor: pointer; color: var(--white); margin-left: 30px; font-size: 1.1rem; transition: 0.3s; }
+        #cart-badge { position: absolute; top: -8px; right: -10px; background: var(--accent); color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 50%; display: none; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 90vh;
+            background: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)), url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1500&q=80') center/cover;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: var(--white);
+            padding: 0 20px;
+        }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 8vw, 5rem); margin-bottom: 20px; line-height: 1.1; }
+        .hero p { max-width: 600px; font-size: 1.1rem; opacity: 0.9; margin-bottom: 40px; }
+        .hero-btns { display: flex; gap: 15px; }
+
+        /* --- FEATURES --- */
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; padding: 0 8%; margin-top: -100px; position: relative; z-index: 50; }
+        .f-card { background: var(--white); padding: 45px 35px; border-radius: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.06); transition: 0.3s; }
+        .f-card:hover { transform: translateY(-10px); }
+        .f-card i { color: var(--accent); font-size: 1.5rem; background: #FFF4F1; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-bottom: 25px; }
+        .f-card h3 { font-family: 'Playfair Display', serif; margin-bottom: 12px; }
+
+        /* --- FAVORITES --- */
+        .favorites { padding: 120px 8% 60px; background-color: #F9F7F0; }
+        .fav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px; }
+        .fav-card img { width: 100%; height: 300px; object-fit: cover; border-radius: 20px; margin-bottom: 20px; }
+        .add-cart-btn { background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer; font-weight: 600; width: 100%; transition: 0.3s; margin-top: 15px; }
+        .add-cart-btn:hover { background: var(--deep-brown); }
+
+        /* --- REVIEWS SLIDER --- */
+        .reviews-section { padding: 80px 0; background-color: #F9F7F0; overflow: hidden; width: 100%; }
+        .reviews-title { text-align: center; margin-bottom: 40px; font-family: 'Playfair Display', serif; font-size: 2.5rem; }
+        .reviews-slider { display: flex; width: max-content; animation: scroll 40s linear infinite; }
+        .reviews-slider:hover { animation-play-state: paused; }
+        .review-card { 
+            background: var(--white); width: 350px; margin: 0 20px; padding: 30px; 
+            border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); flex-shrink: 0;
+        }
+        .review-card i { color: #FFB100; margin-bottom: 10px; font-size: 0.9rem; }
+        .review-card p { font-size: 0.95rem; font-style: italic; margin-bottom: 15px; color: var(--text-muted); }
+        .review-card h5 { font-weight: 700; color: var(--deep-brown); }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* --- SIDEBAR --- */
+        #cart-sidebar { position: fixed; top: 0; right: -400px; width: 380px; height: 100vh; background: white; z-index: 1001; box-shadow: -10px 0 30px rgba(0,0,0,0.1); transition: 0.4s ease-in-out; padding: 40px 30px; display: flex; flex-direction: column; }
+        #cart-sidebar.open { right: 0; }
+        .cart-title { font-family: 'Playfair Display'; font-size: 2rem; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+        #cart-items-list { flex-grow: 1; overflow-y: auto; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 15px 0; }
+        .qty-controls { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+        .qty-btn { background: #eee; border: none; width: 25px; height: 25px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .remove-item { color: #ff4d4d; cursor: pointer; font-size: 0.8rem; margin-top: 5px; display: block; text-decoration: underline; }
+
+        /* --- FOOTER --- */
+        footer { background: var(--deep-brown); color: var(--white); padding: 60px 8% 30px; }
+        .footer-container { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.5fr; gap: 40px; margin-bottom: 40px; }
+        .footer-col h4 { font-family: 'Playfair Display', serif; margin-bottom: 20px; color: var(--accent); }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 10px; font-size: 0.9rem; opacity: 0.8; }
+        .footer-col a { color: inherit; text-decoration: none; }
+        .newsletter-form { display: flex; gap: 10px; margin-top: 15px; }
+        .newsletter-form input { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); padding: 10px 15px; border-radius: 20px; color: white; width: 100%; outline: none; }
+        .newsletter-btn { background: var(--accent); border: none; color: white; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; }
+        .bottom-bar { border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 25px; display: flex; justify-content: space-between; font-size: 0.8rem; opacity: 0.6; }
+
+        @media (max-width: 992px) { .footer-container { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 600px) { .footer-container { grid-template-columns: 1fr; } .hero h1 { font-size: 3rem; } #cart-sidebar { width: 100%; right: -100%; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo"><i class="fas fa-mug-hot"></i> The Daily Grind</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="menu.html">Menu</a>
+            <a href="story.html">Our Story</a>
+            <div class="cart-trigger" id="cart-btn">
+                <i class="fas fa-shopping-basket"></i>
+                <span id="cart-badge">0</span>
+            </div>
+            <a href="menu.html" class="order-btn" style="margin-left:20px;">Order Online</a>
+        </div>
+    </nav>
+
+    <div id="cart-sidebar">
+        <div class="cart-title">Your Order <i class="fas fa-times" id="close-cart" style="cursor:pointer; font-size: 1.2rem;"></i></div>
+        <div id="cart-items-list"></div>
+        <div style="margin-top:20px; border-top:1px solid #eee; padding-top:20px;">
+            <div style="display:flex; justify-content:space-between; font-weight:700; font-size: 1.2rem;">
+                <span>Total</span><span id="cart-total-price">₹0.00</span>
+            </div>
+            <button class="add-cart-btn" onclick="window.location.href='checkout.html'" style="background:var(--deep-brown); margin-top:20px; padding: 15px;">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <section class="hero">
+        <span style="background:var(--accent); padding:6px 16px; border-radius:20px; font-size:0.75rem; font-weight: 600; margin-bottom:20px; letter-spacing: 1px;">NOW BREWING FRESH ORIGINS</span>
+        <h1>Wake Up to Perfection</h1>
+        <p>Experience artisanal coffee roasted to perfection, served in a space designed for connection and creativity.</p>
+        <div class="hero-btns">
+            <a href="menu.html" class="order-btn" style="background:var(--accent); border:none; padding:15px 35px; color:white; font-weight: 600;">View Our Menu</a>
+            <a href="#footer" class="order-btn" style="padding:15px 35px; color:white; font-weight: 600;">Visit Us →</a>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="f-card"><i class="far fa-star"></i><h3>Quality First</h3><p>Ethically sourced beans from the world's best regions.</p></div>
+        <div class="f-card"><i class="far fa-clock"></i><h3>Fresh Daily</h3><p>Pastries baked fresh every morning in our kitchen.</p></div>
+        <div class="f-card"><i class="fas fa-award"></i><h3>Expert Baristas</h3><p>Every cup crafted with passion and precision.</p></div>
+    </section>
+
+    <section class="favorites">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 50px;">
+            <div>
+                <h2 style="font-family:'Playfair Display'; font-size:2.8rem;">Our Favorites</h2>
+                <p style="opacity: 0.7;">Curated selection of our customers' most loved items.</p>
+            </div>
+            <a href="menu.html" style="color: var(--accent); text-decoration: none; font-weight: 600;">See Full Menu →</a>
+        </div>
+        
+        <div class="fav-grid">
+            <div class="fav-card" data-name="Signature Latte" data-price="350">
+                <img src="https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&w=600" alt="Latte">
+                <div style="display:flex; justify-content:space-between; align-items: baseline;">
+                    <h4>Signature Latte</h4><span style="font-weight: 700;">₹350</span>
+                </div>
+                <button class="add-cart-btn">Add to Cart</button>
+            </div>
+            <div class="fav-card" data-name="Butter Croissant" data-price="180">
+                <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600" alt="Croissant">
+                <div style="display:flex; justify-content:space-between; align-items: baseline;">
+                    <h4>Butter Croissant</h4><span style="font-weight: 700;">₹180</span>
+                </div>
+                <button class="add-cart-btn">Add to Cart</button>
+            </div>
+            <div class="fav-card" data-name="Avocado Smash" data-price="450">
+                <img src="https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600" alt="Toast">
+                <div style="display:flex; justify-content:space-between; align-items: baseline;">
+                    <h4>Avocado Smash</h4><span style="font-weight: 700;">₹450</span>
+                </div>
+                <button class="add-cart-btn">Add to Cart</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="reviews-section">
+        <h2 class="reviews-title">What Our Customers Say</h2>
+        <div class="reviews-slider">
+            <div class="review-card"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><p>"Best latte in the city! The ambiance is perfect."</p><h5>- Aarav Sharma</h5></div>
+            <div class="review-card"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><p>"The butter croissants are addictive."</p><h5>- Priya Patel</h5></div>
+            <div class="review-card"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><p>"A coffee lover's dream spot."</p><h5>- Rohan Das</h5></div>
+            <div class="review-card"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><p>"Love the healthy options here."</p><h5>- Ishita Gupta</h5></div>
+            <div class="review-card"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><p>"Expert baristas and great craft."</p><h5>- Vikram Singh</h5></div>
+            <div class="review-card"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><p>"Excellent WiFi and vibes."</p><h5>- Neha Verma</h5></div>
+            <div class="review-card"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><p>"Best latte in the city! The ambiance is perfect."</p><h5>- Aarav Sharma</h5></div>
+            <div class="review-card"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><p>"The butter croissants are addictive."</p><h5>- Priya Patel</h5></div>
+            <div class="review-card"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><p>"A coffee lover's dream spot."</p><h5>- Rohan Das</h5></div>
+            <div class="review-card"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><p>"Love the healthy options here."</p><h5>- Ishita Gupta</h5></div>
+            <div class="review-card"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><p>"Expert baristas and great craft."</p><h5>- Vikram Singh</h5></div>
+            <div class="review-card"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><p>"Excellent WiFi and vibes."</p><h5>- Neha Verma</h5></div>
+        </div>
+    </section>
+
+    <footer id="footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h2 style="font-family:'Playfair Display'; margin-bottom:15px;">The Daily Grind</h2>
+                <p style="font-size:0.85rem; opacity:0.7;">Crafting perfect moments, one cup at a time.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Explore</h4>
+                <ul><li><a href="index.html">Home</a></li><li><a href="menu.html">Menu</a></li><li><a href="story.html">Our Story</a></li></ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <ul><li><i class="fas fa-map-marker-alt"></i> 123 Coffee Lane</li><li><i class="fas fa-phone"></i> +91 98765 43210</li></ul>
+            </div>
+            <div class="footer-col">
+                <h4>Join the Grind</h4>
+                <form class="newsletter-form" onsubmit="event.preventDefault();"><input type="email" placeholder="Email" required><button type="submit" class="newsletter-btn">Join</button></form>
+            </div>
+        </div>
+        <div class="bottom-bar"><p>© 2026 The Daily Grind Cafe. Developed by Md Rehan.</p></div>
+    </footer>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('coffee_cart')) || [];
+        const sidebar = document.getElementById('cart-sidebar');
+        const badge = document.getElementById('cart-badge');
+
+        document.getElementById('cart-btn').addEventListener('click', () => sidebar.classList.add('open'));
+        document.getElementById('close-cart').addEventListener('click', () => sidebar.classList.remove('open'));
+
+        function addToCart(name, price) {
+            const existing = cart.find(item => item.name === name);
+            if (existing) { existing.quantity += 1; } else { cart.push({ name, price, quantity: 1 }); }
+            save();
+            sidebar.classList.add('open');
+        }
+
+        function changeQuantity(index, delta) {
+            cart[index].quantity += delta;
+            if (cart[index].quantity <= 0) { cart.splice(index, 1); }
+            save();
+        }
+
+        function removeItem(index) { cart.splice(index, 1); save(); }
+        function save() { localStorage.setItem('coffee_cart', JSON.stringify(cart)); update(); }
+
+        function update() {
+            const list = document.getElementById('cart-items-list');
+            list.innerHTML = '';
+            let total = 0; let totalItems = 0;
+            cart.forEach((item, index) => {
+                total += item.price * item.quantity;
+                totalItems += item.quantity;
+                list.innerHTML += `
+                    <div class="cart-item">
+                        <div>
+                            <span style="font-weight:600;">${item.name}</span><br>
+                            <span style="color:var(--accent);">₹${(item.price * item.quantity).toFixed(2)}</span>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="changeQuantity(${index}, -1)">-</button>
+                                <span>${item.quantity}</span>
+                                <button class="qty-btn" onclick="changeQuantity(${index}, 1)">+</button>
+                            </div>
+                            <span class="remove-item" onclick="removeItem(${index})">Remove</span>
+                        </div>
+                    </div>`;
+            });
+            badge.innerText = totalItems;
+            badge.style.display = totalItems > 0 ? 'block' : 'none';
+            document.getElementById('cart-total-price').innerText = `₹${total.toFixed(2)}`;
+        }
+
+        document.querySelectorAll('.add-cart-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const card = e.target.closest('[data-name]');
+                addToCart(card.dataset.name, parseFloat(card.dataset.price));
+            });
+        });
+
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('openCart') === 'true') { sidebar.classList.add('open'); }
+            update();
+        });
+    </script>
+</body>
+</html>

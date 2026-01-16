@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Menu | The Daily Grind</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root { --accent: #E07A5F; --deep-brown: #3D2B1F; --bg-cream: #F4F1DE; --white: #FFFFFF; }
+        
+        /* FIX: Ensures content is pushed below the fixed header */
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-cream); color: var(--deep-brown); padding: 110px 8% 60px; margin: 0; }
+        
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--deep-brown);
+            padding: 15px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 2000; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+        
+        .header-logo { color: var(--white); text-decoration: none; font-family: 'Playfair Display', serif; font-size: 1.5rem; }
+        
+        /* Go to Cart Button in Header */
+        .go-to-cart-btn {
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-right: 15px;
+            transition: 0.3s;
+        }
+        .go-to-cart-btn:hover { background: #ce6a4f; transform: translateY(-2px); }
+
+        .cart-trigger { 
+            position: relative; 
+            cursor: pointer; 
+            color: var(--white); 
+            font-size: 1.3rem; 
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: 0.3s;
+        }
+        .cart-trigger:hover { transform: scale(1.1); }
+
+        #cart-badge { 
+            position: absolute; 
+            top: -8px; 
+            right: -10px; 
+            background: var(--accent); 
+            color: white; 
+            font-size: 0.7rem; 
+            padding: 2px 6px; 
+            border-radius: 50%; 
+            font-weight: bold;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .menu-nav { margin-top: 0px; margin-bottom: 50px; }
+        .back-btn { text-decoration: none; color: var(--accent); font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+        .back-btn:hover { padding-left: 5px; }
+        
+        h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; margin-bottom: 40px; text-align: center; }
+        
+        .menu-section { margin-bottom: 60px; }
+        .category-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--accent); margin-bottom: 30px; border-bottom: 2px solid #EAE2B7; padding-bottom: 10px; }
+        
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+        
+        /* ADDED ANIMATION TO MENU ITEM */
+        .menu-item { 
+            background: var(--white); 
+            padding: 20px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+        .menu-item:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+
+        .item-image { width: 100%; height: 200px; object-fit: cover; border-radius: 15px; margin-bottom: 15px; transition: 0.5s; }
+        .menu-item:hover .item-image { transform: scale(1.03); }
+
+        .item-info-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+        .item-info h4 { font-family: 'Playfair Display', serif; font-size: 1.2rem; }
+        .item-price { font-weight: 700; color: var(--deep-brown); }
+        .item-info p { font-size: 0.85rem; color: #555; margin-bottom: 15px; line-height: 1.4; flex-grow: 1;}
+
+        .add-cart-btn { 
+            background: var(--accent); 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 25px; 
+            cursor: pointer; 
+            font-family: 'Plus Jakarta Sans'; 
+            font-weight: 600; 
+            width: 100%; 
+            transition: 0.3s; 
+            margin-top: auto;
+        }
+        .add-cart-btn:hover { background: var(--deep-brown); transform: scale(1.02); }
+        .add-cart-btn:active { transform: scale(0.98); }
+
+        .card-qty-controls {
+            display: none; 
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 10px 0;
+            background: #f8f8f8;
+            padding: 5px;
+            border-radius: 25px;
+            animation: fadeIn 0.3s ease;
+        }
+        .card-qty-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .card-qty-btn:hover { background: var(--deep-brown); transform: scale(1.1); }
+
+        /* KEYFRAMES */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            80% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        footer { text-align: center; margin-top: 100px; padding-top: 40px; border-top: 1px solid #ddd; font-size: 0.9rem; opacity: 0.7; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="header-logo">The Daily Grind</a>
+        <div style="display: flex; align-items: center;">
+            <a href="index.html?openCart=true" class="go-to-cart-btn">Go to Cart</a>
+            <a href="index.html" class="cart-trigger">
+                <i class="fas fa-shopping-basket"></i>
+                <span id="cart-badge">0</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="menu-nav">
+        <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+
+    <h1>The Full Menu</h1>
+
+    <div class="menu-section">
+        <h2 class="category-title">Hot Coffee</h2>
+        <div class="menu-grid">
+            <div class="menu-item" data-name="Caramel Macchiato" data-price="350" style="animation-delay: 0.1s;">
+                <img src="https://images.unsplash.com/photo-1485808191679-5f86510681a2?auto=format&fit=crop&w=500" class="item-image" alt="Caramel Macchiato">
+                <div class="item-info">
+                    <div class="item-info-header">
+                        <h4>Caramel Macchiato</h4>
+                        <span class="item-price">₹350</span>
+                    </div>
+                    <p>Espresso, steamed milk, vanilla & caramel drizzle.</p>
+                </div>
+                <div class="card-qty-controls">
+                    <button class="card-qty-btn minus">-</button>
+                    <span class="card-qty-val">1</span>
+                    <button class="card-qty-btn plus">+</button>
+                </div>
+                <button class="add-cart-btn">Add to Cart</button>
+            </div>
+
+            <div class="menu-item" data-name="Flat White" data-price="320" style="animation-delay: 0.2s;">
+                <img src="https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?auto=format&fit=crop&w=500" class="item-image" alt="Flat White">
+                <div class="item-info">
+                    <div class="item-info-header">
+                        <h4>Flat White</h4>
+                        <span class="item-price">₹320</span>
+                    </div>
+                    <p>Ristretto shots with thin, silky microfoam.</p>
+                </div>
+                <div class="card-qty-controls">
+                    <button class="card-qty-btn minus">-</button>
+                    <span class="card-qty-val">1</span>
+                    <button class="card-qty-btn plus">+</button>
+                </div>
+                <button class="add-cart-btn">Add to Cart</button>
+            </div>
+
+            <div class="menu-item" data-name="Mocha Latte" data-price="380" style="animation-delay: 0.3s;">
+                <img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?auto=format&fit=crop&w=500" class="item-image" alt="Mocha Latte">
+                <div class="item-info">
+                    <div class="item-info-header">
+                        <h4>Mocha Latte</h4>
+                        <span class="item-price">₹380</span>
+                    </div>
+                    <p>Rich chocolate and espresso.</p>
+                </div>
+                <div class="card-qty-controls">
+                    <button class="card-qty-btn minus">-</button>
+                    <span class="card-qty-val">1</span>
+                    <button class="card-qty-btn plus">+</button>
+                </div>
+                <button class="add-cart-btn">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="menu-section">
+        <h2 class="category-title">Tea & Specials</h2>
+        <div class="menu-grid">
+            <div class="menu-item" data-name="Matcha Latte" data-price="420" style="animation-delay: 0.4s;">
+                <img src="matcha.png" class="item-image" alt="Matcha Latte">
+                <div class="item-info">
+                    <div class="item-info-header">
+                        <h4>Matcha Green Tea</h4>
+                        <span class="item-price">₹420</span>
+                    </div>
+                    <p>Ceremonial grade matcha with oat milk.</p>
+                </div>
+                <div class="card-qty-controls">
+                    <button class="card-qty-btn minus">-</button>
+                    <span class="card-qty-val">1</span>
+                    <button class="card-qty-btn plus">+</button>
+                </div>
+                <button class="add-cart-btn">Add to Cart</button>
+            </div>
+
+            <div class="menu-item" data-name="London Fog" data-price="340" style="animation-delay: 0.5s;">
+                <img src="london.png" class="item-image" alt="London Fog">
+                <div class="item-info">
+                    <div class="item-info-header">
+                        <h4>London Fog</h4>
+                        <span class="item-price">₹340</span>
+                    </div>
+                    <p>Earl grey tea, vanilla, and steamed milk.</p>
+                </div>
+                <div class="card-qty-controls">
+                    <button class="card-qty-btn minus">-</button>
+                    <span class="card-qty-val">1</span>
+                    <button class="card-qty-btn plus">+</button>
+                </div>
+                <button class="add-cart-btn">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="menu-section">
+        <h2 class="category-title">Bakery & Food</h2>
+        <div class="menu-grid">
+            <div class="menu-item" data-name="Almond Croissant" data-price="280" style="animation-delay: 0.6s;">
+                <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=500" class="item-image" alt="Almond Croissant">
+                <div class="item-info">
+                    <div class="item-info-header">
+                        <h4>Almond Croissant</h4>
+                        <span class="item-price">₹280</span>
+                    </div>
+                    <p>Twice baked with almond frangipane.</p>
+                </div>
+                <div class="card-qty-controls">
+                    <button class="card-qty-btn minus">-</button>
+                    <span class="card-qty-val">1</span>
+                    <button class="card-qty-btn plus">+</button>
+                </div>
+                <button class="add-cart-btn">Add to Cart</button>
+            </div>
+
+            <div class="menu-item" data-name="Blueberry Muffin" data-price="220" style="animation-delay: 0.7s;">
+                <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&w=500" class="item-image" alt="Blueberry Muffin">
+                <div class="item-info">
+                    <div class="item-info-header">
+                        <h4>Blueberry Muffin</h4>
+                        <span class="item-price">₹220</span>
+                    </div>
+                    <p>Bursting with fresh berries and sugar crumble.</p>
+                </div>
+                <div class="card-qty-controls">
+                    <button class="card-qty-btn minus">-</button>
+                    <span class="card-qty-val">1</span>
+                    <button class="card-qty-btn plus">+</button>
+                </div>
+                <button class="add-cart-btn">Add to Cart</button>
+            </div>
+
+            <div class="menu-item" data-name="Salmon Bagel" data-price="650" style="animation-delay: 0.8s;">
+                <img src="salmon.png" class="item-image" alt="Salmon Bagel">
+                <div class="item-info">
+                    <div class="item-info-header">
+                        <h4>Salmon Bagel</h4>
+                        <span class="item-price">₹650</span>
+                    </div>
+                    <p>Cream cheese, capers, and red onion.</p>
+                </div>
+                <div class="card-qty-controls">
+                    <button class="card-qty-btn minus">-</button>
+                    <span class="card-qty-val">1</span>
+                    <button class="card-qty-btn plus">+</button>
+                </div>
+                <button class="add-cart-btn">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        © 2026 The Daily Grind. Prices subject to change.
+    </footer>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('coffee_cart')) || [];
+
+        function updateCartBadge() {
+            const badge = document.getElementById('cart-badge');
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            badge.innerText = totalCount;
+            badge.style.display = totalCount > 0 ? 'block' : 'none';
+        }
+
+        function updateMenuCardsUI() {
+            document.querySelectorAll('.menu-item').forEach(card => {
+                const name = card.getAttribute('data-name');
+                const item = cart.find(i => i.name === name);
+                const qtyControls = card.querySelector('.card-qty-controls');
+                const addBtn = card.querySelector('.add-cart-btn');
+                const qtyVal = card.querySelector('.card-qty-val');
+
+                if (item) {
+                    qtyControls.style.display = 'flex';
+                    addBtn.style.display = 'none';
+                    qtyVal.innerText = item.quantity;
+                } else {
+                    qtyControls.style.display = 'none';
+                    addBtn.style.display = 'block';
+                }
+            });
+            updateCartBadge();
+        }
+
+        document.querySelectorAll('.add-cart-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const menuItem = e.target.closest('.menu-item');
+                const name = menuItem.getAttribute('data-name');
+                const price = parseFloat(menuItem.getAttribute('data-price'));
+
+                const existingItem = cart.find(item => item.name === name);
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push({ name, price, quantity: 1 });
+                }
+                
+                localStorage.setItem('coffee_cart', JSON.stringify(cart));
+                updateMenuCardsUI();
+            });
+        });
+
+        document.querySelectorAll('.card-qty-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const menuItem = e.target.closest('.menu-item');
+                const name = menuItem.getAttribute('data-name');
+                const item = cart.find(i => i.name === name);
+
+                if (button.classList.contains('plus')) {
+                    item.quantity += 1;
+                } else {
+                    item.quantity -= 1;
+                    if (item.quantity <= 0) {
+                        cart = cart.filter(i => i.name !== name);
+                    }
+                }
+
+                localStorage.setItem('coffee_cart', JSON.stringify(cart));
+                updateMenuCardsUI();
+            });
+        });
+
+        updateMenuCardsUI();
+    </script>
+</body>
+</html>
